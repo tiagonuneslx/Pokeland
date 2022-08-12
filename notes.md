@@ -2,7 +2,7 @@
 
 I decided to build the PokeLand app, a simple and clean app showcasing all the different Pokemon, and some of their details.
 
-For most of the design decisions I took, the most influential factor to consider was time, as I'm currently working full-time, and it's hard to find the time to invest in this project.
+For most of the design decisions I took, the most influential factor to consider was time, as I'm currently working full-time, and it was hard to find the time to invest in this project.
 
 ## App features
 
