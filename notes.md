@@ -13,7 +13,7 @@ For most of the design decisions I took, the most influential factor to consider
 
 2. Clicking on any Pokemon card will show the Details Screen
     - This screen shows the following sections:
-      1. About, with information from the Pokemon Species its default Pokemon.
+      1. About, with information from the Pokemon Species and from its default Pokemon.
       2. Moves, with a list of Moves the Pokemon learns.
       3. Stats, showing a progress bar from 0 to 255 for each stat.
       4. Evolutions, with all possible evolutions from the species. To make it simpler, I only show the minimum level needed to trigger the evolution.
