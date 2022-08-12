@@ -19,7 +19,7 @@ For most of the design decisions I took, the most influential factor to consider
       4. Evolutions, with all possible evolutions from the species. To make it simpler, I only show the minimum level needed to trigger the evolution.
     - The information about the selected Pokemon is shared via a shared ViewModel. This way, we don't need to fetch information that we already had while on the List screen.
 
-3. Night mode is fully supported.
+3. Dark mode is fully supported.
 
 4. Landscape orientation changes the layouts of the app.
 
