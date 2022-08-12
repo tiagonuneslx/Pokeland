@@ -25,7 +25,7 @@ For most of the design decisions I took, the most influential factor to consider
 
 5. Unit testing and UI included (though not too robust).
 
-6. Dependency Injection used.
+6. Dependency Injection.
 
 7. Pagination and placeholders.
 
