@@ -6,9 +6,9 @@
 
 ## Demo
 
-List Screen                |  Details Screen       
-:-------------------------:|:---------------------------:
-![](assets/demo-list.png)  |  ![](assets/demo-about.png)
+|        List Screen        |       Details Screen       |
+|:-------------------------:|:--------------------------:|
+| ![](assets/demo-list.png) | ![](assets/demo-about.png) |
 
 https://user-images.githubusercontent.com/49025614/184387822-ebcae86e-2177-4779-9eed-d685114f7504.mp4
 
