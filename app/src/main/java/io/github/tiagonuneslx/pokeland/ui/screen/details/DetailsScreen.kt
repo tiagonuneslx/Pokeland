@@ -1,35 +1,68 @@
 package io.github.tiagonuneslx.pokeland.ui.screen.details
 
+import android.app.Activity
 import android.content.res.Configuration
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Icon
+import androidx.compose.material.LinearProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.TabRow
+import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import com.google.accompanist.pager.*
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.fade
 import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import io.github.tiagonuneslx.pokeland.data.model.Pokemon
 import io.github.tiagonuneslx.pokeland.data.sample.PokemonSamples
 import io.github.tiagonuneslx.pokeland.ui.screen.SharedViewModel
@@ -48,7 +81,7 @@ import kotlinx.coroutines.launch
 fun DetailsScreen(
     navController: NavHostController,
     sharedViewModel: SharedViewModel,
-    viewModel: DetailsViewModel = hiltViewModel()
+    viewModel: DetailsViewModel = hiltViewModel(),
 ) {
     val pokemon by sharedViewModel.selectedPokemonFlow.collectAsState()
     val moves by viewModel.movesFlow.collectAsState()
@@ -70,13 +103,11 @@ fun DetailsScreen(
     evolutions: List<Pokemon.Evolution>?,
     back: () -> Unit,
 ) {
-    val systemUiController = rememberSystemUiController()
-    LaunchedEffect(systemUiController) {
+    val view = LocalView.current
+    val window = (view.context as Activity).window
+    LaunchedEffect(window) {
         delay(500)
-        systemUiController.setStatusBarColor(
-            color = Color.Transparent,
-            darkIcons = true
-        )
+        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = true
     }
     Surface(
         color = pokemon?.types?.first()?.color ?: Pokemon.Type.Unknown.color,
@@ -112,7 +143,6 @@ fun DetailsScreen(
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 private fun Card(
     pokemon: Pokemon?,
@@ -126,17 +156,14 @@ private fun Card(
             .fillMaxSize()
             .padding(top = if (orientation == Configuration.ORIENTATION_LANDSCAPE) 72.dp else 200.dp)
     ) {
-        val pagerState = rememberPagerState()
         val pages = listOf("About", "Moves", "Stats", "Evolutions")
+        val pagerState = rememberPagerState { pages.size }
         val coroutineScope = rememberCoroutineScope()
 
         Column(Modifier.padding(top = if (orientation == Configuration.ORIENTATION_LANDSCAPE) 16.dp else 40.dp)) {
             Tabs(pagerState, pages, coroutineScope)
 
-            HorizontalPager(
-                count = pages.size,
-                state = pagerState,
-            ) { page ->
+            HorizontalPager(pagerState) { page ->
                 when (page) {
                     0 -> About(pokemon)
                     1 -> Moves(moves)
@@ -420,7 +447,6 @@ private fun AboutField(label: String, value: String?) {
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 private fun Tabs(
     pagerState: PagerState,
@@ -432,10 +458,7 @@ private fun Tabs(
         indicator = { tabPositions ->
             Box(
                 Modifier
-                    .pagerTabIndicatorOffset(
-                        pagerState,
-                        tabPositions
-                    )
+                    .tabIndicatorOffset(tabPositions[pagerState.currentPage])
                     .height(5.dp)
                     .requiredWidth(40.dp)
                     .clip(RoundedCornerShape(5.dp))

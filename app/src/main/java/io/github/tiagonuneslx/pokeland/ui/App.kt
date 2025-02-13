@@ -1,6 +1,9 @@
 package io.github.tiagonuneslx.pokeland.ui
 
-import androidx.compose.animation.*
+import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,40 +13,37 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
-import com.google.accompanist.navigation.animation.navigation
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navigation
 import io.github.tiagonuneslx.pokeland.ui.screen.SharedViewModel
 import io.github.tiagonuneslx.pokeland.ui.screen.details.DetailsScreen
 import io.github.tiagonuneslx.pokeland.ui.screen.list.ListScreen
 import io.github.tiagonuneslx.pokeland.ui.theme.PokelandTheme
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun App() {
-    val navController = rememberAnimatedNavController()
+fun ComponentActivity.App() {
+    val navController = rememberNavController()
     PokelandTheme {
-        val systemUiController = rememberSystemUiController()
         val isDarkMode = isSystemInDarkTheme()
         val surfaceColor = MaterialTheme.colors.surface
-        LaunchedEffect(systemUiController, isDarkMode, surfaceColor) {
-            systemUiController.setStatusBarColor(
-                color = Color.Transparent,
-                darkIcons = !isDarkMode
-            )
-            systemUiController.setNavigationBarColor(
-                color = surfaceColor,
-                darkIcons = !isDarkMode
+        LaunchedEffect(isDarkMode, surfaceColor) {
+            enableEdgeToEdge(
+                statusBarStyle = SystemBarStyle.auto(
+                    android.graphics.Color.TRANSPARENT,
+                    android.graphics.Color.TRANSPARENT,
+                ) { isDarkMode },
+                navigationBarStyle = SystemBarStyle.auto(
+                    surfaceColor.toArgb(),
+                    surfaceColor.toArgb(),
+                ) { isDarkMode }
             )
         }
         Surface(Modifier.fillMaxSize()) {
-            AnimatedNavHost(
+            NavHost(
                 navController = navController,
                 startDestination = "pokeland",
             ) {
@@ -61,13 +61,13 @@ fun App() {
                         "details",
                         enterTransition = {
                             slideIntoContainer(
-                                AnimatedContentScope.SlideDirection.Up,
+                                AnimatedContentTransitionScope.SlideDirection.Up,
                                 animationSpec = tween(400)
                             )
                         },
                         popExitTransition = {
                             slideOutOfContainer(
-                                AnimatedContentScope.SlideDirection.Down,
+                                AnimatedContentTransitionScope.SlideDirection.Down,
                                 animationSpec = tween(200)
                             )
                         },

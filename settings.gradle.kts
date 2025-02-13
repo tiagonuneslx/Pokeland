@@ -4,16 +4,12 @@ pluginManagement {
         google()
         mavenCentral()
     }
-    resolutionStrategy {
-        eachPlugin {
-            if(requested.id.id == "dagger.hilt.android.plugin") {
-                useModule("com.google.dagger:hilt-android-gradle-plugin:${requested.version}")
-            }
-        }
-    }
 }
+
 dependencyResolutionManagement {
+    @Suppress("UnstableApiUsage")
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    @Suppress("UnstableApiUsage")
     repositories {
         google()
         mavenCentral()
